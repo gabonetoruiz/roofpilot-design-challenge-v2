@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design notes — Job page redesign · RoofPilot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://use.hugeicons.com/font/icons.css">
+<style>
+:root{
+  --orange:#FF6027; --orange-dark:#CC4D1F; --orange-light:#FFECE3;
+  --blue:#2F6FED; --blue-light:#E8F0FE; --blue-dark:#1E4FBE;
+  --green:#1E9E5A; --green-light:#E3F8EC; --green-dark:#146B3C;
+  --purple:#7C5CDB; --purple-light:#EFEAFC;
+  --ink:#171A1F; --ink-2:#4B5160; --ink-3:#8A8F9C;
+  --line:#E7E8EC; --surface:#FFFFFF; --page:#F3F4F7;
+  --r-lg:20px; --r-md:14px; --r-sm:10px;
+  --shadow:0 1px 2px rgba(23,26,31,.04), 0 6px 20px rgba(23,26,31,.07);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--page);color:var(--ink);
+  font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.doc{max-width:760px;margin:0 auto;padding:48px 24px 80px}
+.eyebrow{color:var(--orange-dark);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.doc h1{font-size:28px;font-weight:800;margin:0 0 6px;line-height:1.2}
+.doc .byline{color:var(--ink-3);font-size:14px;margin:0 0 20px}
+.back-link{
+  display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--blue);
+  text-decoration:none;margin-bottom:20px;
+}
+.scope-note{
+  background:var(--orange-light);border:1px solid #F5C6A8;border-radius:var(--r-md);
+  padding:14px 16px;font-size:13.5px;color:var(--ink-2);line-height:1.55;margin-bottom:8px;
+}
+.scope-note b{color:var(--orange-dark)}
+.doc h2{font-size:19px;font-weight:800;margin:40px 0 16px;padding-top:24px;border-top:1px solid var(--line);color:var(--ink)}
+.doc h2:first-of-type{border-top:none;padding-top:0}
+.dec-list{display:flex;flex-direction:column;gap:16px}
+.dec{background:var(--surface);border-radius:var(--r-md);box-shadow:var(--shadow);padding:14px 16px}
+.dec b{display:block;font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.dec p{margin:0;font-size:13.5px;color:var(--ink-2);line-height:1.55}
+.dec code{background:var(--page);border-radius:4px;padding:1px 5px;font-size:12.5px}
+.flow-intro{font-size:13.5px;color:var(--ink-2);line-height:1.6;margin-bottom:20px}
+.flow-intro a{color:var(--blue);font-weight:600;text-decoration:none}
+.flow-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media (max-width:680px){.flow-grid{grid-template-columns:repeat(2,1fr)}}
+.flow-step{background:var(--surface);border-radius:var(--r-md);box-shadow:var(--shadow);padding:12px;text-align:center}
+.flow-num{
+  display:inline-flex;width:20px;height:20px;border-radius:50%;background:var(--ink);color:#fff;
+  align-items:center;justify-content:center;font-size:10.5px;font-weight:700;margin-bottom:8px;
+}
+.flow-cap{font-size:11.5px;color:var(--ink-2);margin-top:8px;line-height:1.4}
+.mini-phone{
+  border:1px solid var(--line);border-radius:14px;background:var(--page);padding:9px;height:190px;
+  position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start;
+}
+.mini-card{background:#fff;border-radius:10px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.mini-title{font-size:8.5px;font-weight:800;margin-bottom:6px;color:var(--ink)}
+.mini-row{display:flex;align-items:center;gap:6px;padding:4px 0}
+.mini-avatar{width:19px;height:19px;border-radius:50%;background:var(--blue-light);color:var(--blue-dark);font-size:6.5px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mini-avatar.purple{background:var(--purple-light);color:var(--purple)}
+.mini-name{font-size:7.8px;font-weight:700;color:var(--ink)}
+.mini-sub{font-size:6.6px;color:var(--ink-3)}
+.mini-tag{font-size:5.6px;font-weight:700;color:var(--blue-dark);background:var(--blue-light);padding:1px 5px;border-radius:10px;margin-left:4px}
+.mini-btn-dash{
+  margin-top:8px;border:1.5px dashed var(--line);border-radius:8px;text-align:center;padding:6px;font-size:6.8px;font-weight:700;color:var(--ink-2);
+}
+.tap-dot{position:absolute;width:20px;height:20px;border:2px solid var(--orange);border-radius:50%;opacity:.6}
+.sheet-mini{background:#fff;border-radius:12px 12px 0 0;padding:9px;position:absolute;left:9px;right:9px;bottom:9px;box-shadow:0 -4px 12px rgba(0,0,0,.08)}
+.sheet-mini .h{font-size:8.5px;font-weight:800;margin-bottom:7px;color:var(--ink)}
+.mini-field{margin-bottom:6px}
+.mini-field .l{font-size:6px;font-weight:700;color:var(--ink-2);margin-bottom:2px}
+.mini-field .v{border:1px solid var(--line);border-radius:5px;padding:4px 6px;font-size:6.8px;background:#fbfbfc;min-height:9px;color:var(--ink-3)}
+.mini-field .v.filled{color:var(--ink);font-weight:600}
+.chip-mini{display:inline-block;font-size:5.6px;font-weight:700;padding:2px 6px;border-radius:10px;background:var(--orange);color:#fff;margin-right:3px}
+.chip-mini.off{background:#fff;border:1px solid var(--line);color:var(--ink-2)}
+.mini-submit{background:var(--orange);color:#fff;text-align:center;border-radius:6px;padding:5px;font-size:7px;font-weight:800;margin-top:7px}
+.toast-mini{
+  position:absolute;left:16px;right:16px;bottom:16px;background:var(--ink);color:#fff;border-radius:8px;
+  padding:6px 8px;font-size:6.8px;font-weight:700;display:flex;align-items:center;gap:5px;
+}
+.toast-dot{width:11px;height:11px;border-radius:50%;background:var(--green);flex-shrink:0}
+.act-mini{border-top:1px solid var(--line);margin-top:7px;padding-top:6px}
+.act-mini .t{font-size:6.8px;font-weight:800;color:var(--ink)}
+.act-mini .d{font-size:6px;color:var(--ink-2)}
+.stage-mini{font-size:6px;font-weight:700;color:var(--orange-dark);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+footer a{color:var(--blue);font-weight:600;text-decoration:none}
+</style>
+</head>
+<body>
+
+<div class="doc">
+
+  <a class="back-link" href="index.html"><i class="hgi-stroke hgi-arrow-left-01 icon-sm"></i> Back to the live prototype</a>
+
+  <div class="doc-header">
+    <div class="eyebrow">RoofPilot · Product Designer challenge</div>
+    <h1>Job page — mobile redesign, handoff notes</h1>
+    <p class="byline">Gabriel Ruiz · info@gabrielruiz.us</p>
+  </div>
+
+  <div class="scope-note"><b>Scope:</b> the brief mentioned both mobile and desktop, but the email that assigned this challenge said the mobile version is what actually gets reviewed — so every hour went into that one surface. The desktop pass called for in the written brief was intentionally left out to protect the quality of the mobile screen.</div>
+
+  <h2>What changed, and why</h2>
+  <div class="dec-list">
+
+    <div class="dec">
+      <b>An always-visible "next step"</b>
+      <p>The original screen never said what to do next once it opened. A dedicated card at the top turns whatever's most urgent on the job — an unanswered estimate, a missing signature — into one sentence and one button, so a rep knows the move before they've even scrolled.</p>
+    </div>
+
+    <div class="dec">
+      <b>Stage progress as a segmented bar, not a 6-dot stepper</b>
+      <p>An early version used a dot-and-line stepper across all 6 pipeline stages, but it got cramped and hard to scan once every stage needed a label. It's now a compact tag ("2 OF 6 · ESTIMATING") plus a row of color-coded segments — green for done, orange for the current stage, gray for what's ahead. Same information, readable at a glance, and it scales cleanly if RoofPilot ever adds a stage.</p>
+    </div>
+
+    <div class="dec">
+      <b>The four daily actions live in a floating bottom bar</b>
+      <p>Note, Task, Email and Message are reachable from anywhere on the page with one thumb. The higher-stakes actions the brief flagged as hardest to find — estimate, proposal, invoice, work order — get their own "Create" button, raised in the center of the same bar with a glass/blur treatment so it reads as the primary action without competing with the four daily ones. Locked items (invoice, work order) stay visible but disabled with a one-line reason, instead of disappearing.</p>
+    </div>
+
+    <div class="dec">
+      <b>Every action confirms itself three ways</b>
+      <p>A toast for the instant, an immediate update to the relevant card (a new contact appears in the list right away), and a permanent line in the Activity timeline underneath. That's a direct answer to "you're not sure if it worked" — the toast fades, but the card and the timeline are proof that stays.</p>
+    </div>
+
+    <div class="dec">
+      <b>Job fields are read-only by default, editable on demand</b>
+      <p>The original screen showed empty dropdowns and date pickers even for fields nobody had filled in yet. The redesign shows clean label/value rows, and one Edit tap turns the whole group into inputs with a single Save — not ten separate fields each needing their own confirmation.</p>
+    </div>
+
+    <div class="dec">
+      <b>Contacts: adding, and now also removing, with one Primary enforced</b>
+      <p>This is the flow demoed below. Adding a second contact was the brief's explicit ask; while building it out further, two related gaps became obvious and got fixed too: contacts can now be removed (blocked once only one is left, since a job always needs at least one contact), and checking "Set as primary contact" on a new contact automatically transfers the Primary tag away from the old one — there's only ever one Primary contact at a time, and if that contact gets deleted, the next remaining one is promoted automatically so the job is never left without one.</p>
+    </div>
+
+    <div class="dec">
+      <b>Notes got their own list, separate from Activity</b>
+      <p>Notes were originally only visible as entries in the Activity feed — readable once, but not something you could revisit, fix a typo in, or remove. There's now a dedicated Notes card with create, edit-in-place, and delete, while Activity stays what it should be: a permanent, read-only audit trail. New notes still log an Activity entry, same as before.</p>
+    </div>
+
+    <div class="dec">
+      <b>Visual direction matched to RoofPilot's real product</b>
+      <p>Colors, card shapes, badges and spacing are pulled from RoofPilot's actual dashboard and job board at roofpilot.ai, not a generic SaaS style — white rounded cards on a light gray page, orange as the one brand/CTA color, blue for informational actions, green for positive states, pill-shaped status badges. Every icon comes from a single set (Hugeicons, stroke style) instead of mixed icon sources.</p>
+    </div>
+
+    <div class="dec">
+      <b>This build: compiled as a component, not a static file</b>
+      <p>This final version was rebuilt in Claude Design as a self-contained component (state + logic separated from the template, matching the same interactions and data as the working prototype) rather than hand-edited HTML/CSS/JS. Same design decisions above, same behavior — just packaged for a cleaner handoff.</p>
+    </div>
+
+  </div>
+
+  <h2>Flow: adding a second contact</h2>
+  <p class="flow-intro">This is the flow requested in the brief, shown start to finish below. It's also fully clickable in <a href="index.html">the live prototype</a> — the fastest way to judge it is to try it yourself, including removing a contact afterward.</p>
+
+  <div class="flow-grid">
+
+    <div class="flow-step">
+      <div class="flow-num">1</div>
+      <div class="mini-phone">
+        <div class="stage-mini">2 of 6 · Estimating</div>
+        <div class="mini-card">
+          <div class="mini-title">Contacts</div>
+          <div class="mini-row"><div class="mini-avatar">MT</div><div><div class="mini-name">Mary Taylor<span class="mini-tag">Primary</span></div><div class="mini-sub">Homeowner</div></div></div>
+          <div class="mini-btn-dash">+ Add related contact</div>
+        </div>
+        <div class="tap-dot" style="left:20px;top:120px"></div>
+      </div>
+      <div class="flow-cap">Tap "Add related contact" on the job's Contacts card.</div>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-num">2</div>
+      <div class="mini-phone">
+        <div class="sheet-mini">
+          <div class="h">Add a contact</div>
+          <div class="mini-field"><div class="l">Full name</div><div class="v"></div></div>
+          <div style="margin-bottom:6px"><span class="chip-mini">Spouse</span><span class="chip-mini off">Co-owner</span><span class="chip-mini off">Other</span></div>
+          <div class="mini-field"><div class="l">Phone</div><div class="v"></div></div>
+          <div class="mini-submit" style="background:var(--line);color:var(--ink-3)">Add contact</div>
+        </div>
+      </div>
+      <div class="flow-cap">A sheet opens: name, relationship, phone, email, and an optional "Set as primary contact" checkbox.</div>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-num">3</div>
+      <div class="mini-phone">
+        <div class="sheet-mini">
+          <div class="h">Add a contact</div>
+          <div class="mini-field"><div class="l">Full name</div><div class="v filled">John Taylor</div></div>
+          <div style="margin-bottom:6px"><span class="chip-mini">Spouse</span><span class="chip-mini off">Co-owner</span><span class="chip-mini off">Other</span></div>
+          <div class="mini-field"><div class="l">Phone</div><div class="v filled">(318) 555-0198</div></div>
+          <div class="mini-submit">Add contact</div>
+        </div>
+      </div>
+      <div class="flow-cap">Fill in John Taylor · Spouse, tap "Add contact."</div>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-num">4</div>
+      <div class="mini-phone">
+        <div class="mini-card">
+          <div class="mini-title">Contacts</div>
+          <div class="mini-row"><div class="mini-avatar">MT</div><div><div class="mini-name">Mary Taylor<span class="mini-tag">Primary</span></div><div class="mini-sub">Homeowner</div></div></div>
+          <div class="mini-row"><div class="mini-avatar purple">JT</div><div><div class="mini-name">John Taylor</div><div class="mini-sub">Spouse</div></div></div>
+          <div class="act-mini"><div class="t">Contact added</div><div class="d">John Taylor (Spouse) · Just now</div></div>
+        </div>
+        <div class="toast-mini"><div class="toast-dot"></div>John Taylor added as a contact</div>
+      </div>
+      <div class="flow-cap">Confirmed 3 ways: toast, updated list, logged activity. Each contact can now be removed too, as long as one remains.</div>
+    </div>
+
+  </div>
+
+  <footer>
+    <span>Job #1002 · Joe House — RoofPilot Product Designer design challenge</span>
+    <span><a href="index.html">Live prototype →</a></span>
+  </footer>
+
+</div>
+
+</body>
+</html>
